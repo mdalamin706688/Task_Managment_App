@@ -1,0 +1,90 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container mt-8">
+  <div class="row justify-content-between align-items-center mb-4">
+    <div class="col-md-6">
+      <h5 class="display-6">Task DashBoard</h5>
+    </div>
+    <div class="col-md-6 text-end">
+      <!-- Add a link to the user's profile if they are authenticated -->
+      {% if user.is_authenticated %}
+
+      <a
+        href="{% url 'edit_profile' %}"
+        class="btn btn-primary btn-sm fs-6 me-2"
+        >Edit Profile</a
+      >
+      <a href="{% url 'logout' %}" class="btn btn-danger btn-sm fs-6">Logout</a>
+      {% endif %}
+    </div>
+  </div>
+  <p class="mb-5 fs-5">
+    Welcome, <span class="text-primary">{{ user.username }}!</span>
+  </p>
+  <a href="{% url 'create_task' %}" class="btn btn-success mt-3 mb-4"
+    >Create New Task</a
+  >
+  <!-- Sorting and Filtering Form -->
+  <form method="get" class="mb-4 mt-7">
+    <div class="row">
+      <div class="col-md-3">
+        <select name="sort_by" class="form-select">
+          <option value="">Sort by</option>
+          <option value="due_date">Due Date</option>
+          <option value="priority">Priority</option>
+          <option value="category">Category</option>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <select name="category" class="form-select">
+          <option value="">Filter by Category</option>
+          {% for category in available_categories %}
+          <option value="{{ category }}">{{ category }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2">
+        <button type="submit" class="btn btn-primary">Apply</button>
+      </div>
+    </div>
+  </form>
+
+  <!-- Task List (Card-Based Design) -->
+  <div class="row">
+    {% for task in tasks %}
+    <div class="col-md-4 mb-4">
+      <div class="card text-start">
+        <div class="card-body">
+          <p class="card-title"><b>Title:</b> {{ task.title }}</p>
+          <p class="card-title"><b>Details:</b> {{ task.description }}</p>
+          <p class="card-title">
+            <b>Due: </b> {{ task.due_date }}
+          </p>
+          <p class="card-title">
+            <b>Priority:</b> {{ task.priority }}
+          </p>
+          {% if task.completed %}
+          <span class="badge bg-success">Completed</span>
+          {% else %}
+          <span class="badge bg-warning">Not Completed</span>
+          {% endif %} {% if task.categories %}
+          <div class="categories mt-2">
+            <b>Categories:</b> {{ task.categories }}
+          </div>
+          {% endif %}
+          <a
+            href="{% url 'edit_task' task.id %}"
+            class="btn btn-primary btn-sm mt-3"
+            >Edit</a
+          >
+          <a
+            href="{% url 'delete_task' task.id %}"
+            class="btn btn-danger btn-sm mt-3"
+            >Delete</a
+          >
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
