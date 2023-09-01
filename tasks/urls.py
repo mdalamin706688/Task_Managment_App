@@ -6,7 +6,7 @@ from users.views import edit_profile  # Import the edit_profile view
 
 
 urlpatterns = [
-    path('', views.task_list, name='task_list'),
+    path('task_list/', views.task_list, name='task_list'),
     path('create/', views.create_task, name='create_task'),
     # URL pattern for editing a task
     path('edit/<int:pk>/', views.edit_task, name='edit_task'),
